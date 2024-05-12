@@ -1,9 +1,12 @@
 const container = document.querySelector(".container");
 const changeGridSizeBtn = document.querySelector(".btn-change-grid-size");
+const clearSketchBtn = document.querySelector(".btn-clear-sketch");
 
 const DEFAULT_GRID_SIZE = 16;
 const SKETCH_WIDTH = 900;
 const SKETCH_HEIGHT = 900;
+
+const PIXEL_COLOR_WHITE = "#fff";
 
 const currentColor = "black";
 let isMouseDown = false;
@@ -37,6 +40,15 @@ function createPixelGrid(size) {
   }
 }
 
+function clearSketch() {
+  const rows = container.children;
+  for (const row of rows) {
+    for (const pixel of row.children) {
+      changePixelColor(pixel, PIXEL_COLOR_WHITE);
+    }
+  }
+}
+
 function createElementWithClass(elementName, className) {
   const element = document.createElement(elementName);
   element.classList.add(className);
@@ -48,24 +60,26 @@ function adjustPixelSizeBasedOnGridSize(pixel, gridSize) {
   pixel.style.height = SKETCH_HEIGHT / gridSize + "px";
 }
 
-function changePixelColor(pixel) {
-  pixel.style.backgroundColor = currentColor;
+function changePixelColor(pixel, color) {
+  pixel.style.backgroundColor = color;
 }
 
 function addMouseListenersToRow(row) {
   row.addEventListener("mousemove", (e) => {
     if (isMouseDown) {
-      changePixelColor(e.target);
+      changePixelColor(e.target, currentColor);
     }
   });
   row.addEventListener("mousedown", (e) => {
-    changePixelColor(e.target);
+    changePixelColor(e.target, currentColor);
   });
 }
 
 createPixelGrid(DEFAULT_GRID_SIZE);
 
 changeGridSizeBtn.addEventListener("click", changeGridSize);
+clearSketchBtn.addEventListener("click", clearSketch);
+
 addEventListener("mousedown", () => (isMouseDown = true));
 addEventListener("mouseup", () => (isMouseDown = false));
 
