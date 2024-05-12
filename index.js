@@ -2,6 +2,7 @@ const container = document.querySelector(".container");
 const changeGridSizeBtn = document.querySelector(".btn-change-grid-size");
 const clearSketchBtn = document.querySelector(".btn-clear-sketch");
 const randomizeColorBtn = document.querySelector(".btn-randomize-color");
+const pixelDimmerBtn = document.querySelector(".btn-pixel-dimmer");
 
 const DEFAULT_GRID_SIZE = 16;
 const SKETCH_WIDTH = 900;
@@ -13,8 +14,17 @@ const PIXEL_COLOR_BLACK = "#000";
 let currentColor = "black";
 let isMouseDown = false;
 let isColorRandomized = false;
+let isPixelDimmerActivated = false;
 
-randomizeColorBtn.addEventListener("click", randomizeColorHandler);
+function pixelDimmerHandler() {
+  if (isPixelDimmerActivated) {
+    isPixelDimmerActivated = false;
+    pixelDimmerBtn.textContent = "Turn off pixel dimmer";
+    return;
+  }
+  isPixelDimmerActivated = true;
+  pixelDimmerBtn.textContent = "Pixel Dimmer";
+}
 
 function randomizeColorHandler() {
   if (!isColorRandomized) {
@@ -103,6 +113,8 @@ function addMouseListenersToRow(row) {
 
 createPixelGrid(DEFAULT_GRID_SIZE);
 
+randomizeColorBtn.addEventListener("click", randomizeColorHandler);
+pixelDimmerBtn.addEventListener("click", pixelDimmerHandler);
 changeGridSizeBtn.addEventListener("click", changeGridSize);
 clearSketchBtn.addEventListener("click", clearSketch);
 
