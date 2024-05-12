@@ -1,18 +1,42 @@
 const container = document.querySelector(".container");
 const changeGridSizeBtn = document.querySelector(".btn-change-grid-size");
 const clearSketchBtn = document.querySelector(".btn-clear-sketch");
+const randomizeColorBtn = document.querySelector(".btn-randomize-color");
 
 const DEFAULT_GRID_SIZE = 16;
 const SKETCH_WIDTH = 900;
 const SKETCH_HEIGHT = 900;
 
 const PIXEL_COLOR_WHITE = "#fff";
+const PIXEL_COLOR_BLACK = "#000";
 
-const currentColor = "black";
+let currentColor = "black";
 let isMouseDown = false;
+let isColorRandomized = false;
+
+randomizeColorBtn.addEventListener("click", randomizeColorHandler);
+
+function randomizeColorHandler() {
+  if (!isColorRandomized) {
+    isColorRandomized = true;
+    randomizeColorBtn.textContent = "Back to default color";
+    return;
+  }
+  isColorRandomized = false;
+  randomizeColorBtn.textContent = "Randomize color";
+  currentColor = PIXEL_COLOR_BLACK;
+}
+
+function getRandomColor() {
+  return `rgb(${getRandomColorChannelValue()}, ${getRandomColorChannelValue()}, ${getRandomColorChannelValue()})`;
+}
+
+function getRandomColorChannelValue() {
+  return Math.floor(Math.random() * 255);
+}
 
 function changeGridSize() {
-  const gridSize = parseInt(prompt("Enter new grid size (from [1,100]):"));
+  let gridSize = parseInt(prompt("Enter new grid size (from [1,100]):"));
   if (!isGridSizeValid(gridSize)) {
     alert(`You have entered incorrect size (${gridSize}) when bounds are [1,100]\n
     So we assign default value of 16 for grid size`);
@@ -65,12 +89,14 @@ function changePixelColor(pixel, color) {
 }
 
 function addMouseListenersToRow(row) {
-  row.addEventListener("mousemove", (e) => {
+  row.addEventListener("mouseover", (e) => {
     if (isMouseDown) {
+      if (isColorRandomized) currentColor = getRandomColor();
       changePixelColor(e.target, currentColor);
     }
   });
   row.addEventListener("mousedown", (e) => {
+    if (isColorRandomized) currentColor = getRandomColor();
     changePixelColor(e.target, currentColor);
   });
 }
