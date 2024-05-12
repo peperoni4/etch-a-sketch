@@ -8,10 +8,10 @@ const DEFAULT_GRID_SIZE = 16;
 const SKETCH_WIDTH = 900;
 const SKETCH_HEIGHT = 900;
 
-const PIXEL_COLOR_WHITE = "#fff";
-const PIXEL_COLOR_BLACK = "#000";
+const PIXEL_COLOR_WHITE = { r: 255, g: 255, b: 255 };
+const PIXEL_COLOR_BLACK = { r: 0, g: 0, b: 0 };
 
-let currentColor = "black";
+let currentColor = PIXEL_COLOR_BLACK;
 let isMouseDown = false;
 let isColorRandomized = false;
 let isPixelDimmerActivated = false;
@@ -38,7 +38,11 @@ function randomizeColorHandler() {
 }
 
 function getRandomColor() {
-  return `rgb(${getRandomColorChannelValue()}, ${getRandomColorChannelValue()}, ${getRandomColorChannelValue()})`;
+  return {
+    r: getRandomColorChannelValue(),
+    g: getRandomColorChannelValue(),
+    b: getRandomColorChannelValue(),
+  };
 }
 
 function getRandomColorChannelValue() {
@@ -95,7 +99,7 @@ function adjustPixelSizeBasedOnGridSize(pixel, gridSize) {
 }
 
 function changePixelColor(pixel, color) {
-  pixel.style.backgroundColor = color;
+  pixel.style.backgroundColor = `rgb(${color.r} ${color.g} ${color.b})`;
 }
 
 function addMouseListenersToRow(row) {
