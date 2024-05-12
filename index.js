@@ -7,6 +7,7 @@ const pixelDimmerBtn = document.querySelector(".btn-pixel-dimmer");
 const DEFAULT_GRID_SIZE = 16;
 const SKETCH_WIDTH = 900;
 const SKETCH_HEIGHT = 900;
+const PIXEL_DIM_STEP = 255 / 10;
 
 const PIXEL_COLOR_WHITE = { r: 255, g: 255, b: 255 };
 const PIXEL_COLOR_BLACK = { r: 0, g: 0, b: 0 };
@@ -19,11 +20,11 @@ let isPixelDimmerActivated = false;
 function pixelDimmerHandler() {
   if (isPixelDimmerActivated) {
     isPixelDimmerActivated = false;
-    pixelDimmerBtn.textContent = "Turn off pixel dimmer";
+    pixelDimmerBtn.textContent = "Pixel Dimmer";
     return;
   }
   isPixelDimmerActivated = true;
-  pixelDimmerBtn.textContent = "Pixel Dimmer";
+  pixelDimmerBtn.textContent = "Turn off pixel dimmer";
 }
 
 function randomizeColorHandler() {
@@ -106,11 +107,45 @@ function addMouseListenersToRow(row) {
   row.addEventListener("mouseover", (e) => {
     if (isMouseDown) {
       if (isColorRandomized) currentColor = getRandomColor();
+      if (isPixelDimmerActivated) {
+        const color =
+          e.target.style.backgroundColor === ""
+            ? window
+                .getComputedStyle(e.target)
+                .getPropertyValue("background-color")
+            : e.target.style.backgroundColor;
+        const colorChannels = color.slice(4, -1).split(", ");
+        colorChannels[0] -= PIXEL_DIM_STEP;
+        colorChannels[1] -= PIXEL_DIM_STEP;
+        colorChannels[2] -= PIXEL_DIM_STEP;
+        currentColor = {
+          r: colorChannels[0],
+          g: colorChannels[1],
+          b: colorChannels[2],
+        };
+      }
       changePixelColor(e.target, currentColor);
     }
   });
   row.addEventListener("mousedown", (e) => {
     if (isColorRandomized) currentColor = getRandomColor();
+    if (isPixelDimmerActivated) {
+      const color =
+        e.target.style.backgroundColor === ""
+          ? window
+              .getComputedStyle(e.target)
+              .getPropertyValue("background-color")
+          : e.target.style.backgroundColor;
+      const colorChannels = color.slice(4, -1).split(", ");
+      colorChannels[0] -= PIXEL_DIM_STEP;
+      colorChannels[1] -= PIXEL_DIM_STEP;
+      colorChannels[2] -= PIXEL_DIM_STEP;
+      currentColor = {
+        r: colorChannels[0],
+        g: colorChannels[1],
+        b: colorChannels[2],
+      };
+    }
     changePixelColor(e.target, currentColor);
   });
 }

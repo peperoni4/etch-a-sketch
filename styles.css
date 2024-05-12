@@ -34,5 +34,5 @@ body {
 
 .pixel {
   border: 1px solid black;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
 }
