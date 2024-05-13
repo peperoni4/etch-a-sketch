@@ -52,12 +52,13 @@ function getRandomColorChannelValue() {
 
 function changeGridSize() {
   let gridSize = prompt("Enter new grid size (from [1,100]):");
+  // check if the user pressed cancel button
   if (!gridSize) return;
   gridSize = parseInt(gridSize);
   if (!isGridSizeValid(gridSize)) {
     alert(`You have entered incorrect size (${gridSize}) when bounds are [1,100]\n
-    So we assign default value of 16 for grid size`);
-    gridSize = DEFAULT_GRID_SIZE;
+    Please, try again with the correct values specified above`);
+    return;
   }
   // remove prev pixel grid
   container.replaceChildren();
