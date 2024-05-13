@@ -14,28 +14,38 @@ const PIXEL_COLOR_BLACK = { r: 0, g: 0, b: 0 };
 
 let currentColor = PIXEL_COLOR_BLACK;
 let isMouseDown = false;
-let isColorRandomized = false;
-let isPixelDimmerActivated = false;
 
-function pixelDimmerHandler() {
-  if (isPixelDimmerActivated) {
-    isPixelDimmerActivated = false;
-    pixelDimmerBtn.textContent = "Pixel Dimmer";
+// to prevent pass by value we wrap them in the object
+let isColorRandomized = { value: false };
+let isPixelDimmerActivated = { value: false };
+
+function toggleButtonTextContent(flag, btnElement, defaultText, activatedText) {
+  if (flag.value) {
+    flag.value = false;
+    btnElement.textContent = defaultText;
     return;
   }
-  isPixelDimmerActivated = true;
-  pixelDimmerBtn.textContent = "Turn off pixel dimmer";
+  flag.value = true;
+  btnElement.textContent = activatedText;
+}
+
+function pixelDimmerHandler() {
+  toggleButtonTextContent(
+    isPixelDimmerActivated,
+    pixelDimmerBtn,
+    "Pixel Dimmer",
+    "Turn off pixel dimmer"
+  );
 }
 
 function randomizeColorHandler() {
-  if (!isColorRandomized) {
-    isColorRandomized = true;
-    randomizeColorBtn.textContent = "Back to default color";
-    return;
-  }
-  isColorRandomized = false;
-  randomizeColorBtn.textContent = "Randomize color";
-  currentColor = PIXEL_COLOR_BLACK;
+  toggleButtonTextContent(
+    isColorRandomized,
+    randomizeColorBtn,
+    "Randomize color",
+    "Back to default color"
+  );
+  if (isColorRandomized.value === false) currentColor = PIXEL_COLOR_BLACK;
 }
 
 function getRandomColor() {
@@ -124,8 +134,8 @@ function getBackgroundColorObjectFromElement(element) {
 }
 
 function drawPixel(pixel) {
-  if (isColorRandomized) currentColor = getRandomColor();
-  if (isPixelDimmerActivated) {
+  if (isColorRandomized.value) currentColor = getRandomColor();
+  if (isPixelDimmerActivated.value) {
     currentColor = getDimmedPixelColor(pixel);
   }
   changePixelColor(pixel, currentColor);
