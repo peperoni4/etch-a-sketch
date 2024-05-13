@@ -106,50 +106,39 @@ function changePixelColor(pixel, color) {
   pixel.style.backgroundColor = `rgb(${color.r} ${color.g} ${color.b})`;
 }
 
+function getDimmedPixelColor(pixel) {
+  const color = getBackgroundColorObjectFromElement(pixel);
+  color.r -= PIXEL_DIM_STEP;
+  color.g -= PIXEL_DIM_STEP;
+  color.b -= PIXEL_DIM_STEP;
+  return color;
+}
+
+function getBackgroundColorObjectFromElement(element) {
+  const color =
+    element.style.backgroundColor === ""
+      ? window.getComputedStyle(element).getPropertyValue("background-color")
+      : element.style.backgroundColor;
+  const colorChannels = color.slice(4, -1).split(", "); // 4 and -1 because we parse rgb()
+  return { r: colorChannels[0], g: colorChannels[1], b: colorChannels[2] };
+}
+
+function drawPixel(pixel) {
+  if (isColorRandomized) currentColor = getRandomColor();
+  if (isPixelDimmerActivated) {
+    currentColor = getDimmedPixelColor(pixel);
+  }
+  changePixelColor(pixel, currentColor);
+}
+
 function addMouseListenersToRow(row) {
   row.addEventListener("mouseover", (e) => {
     if (isMouseDown) {
-      if (isColorRandomized) currentColor = getRandomColor();
-      if (isPixelDimmerActivated) {
-        const color =
-          e.target.style.backgroundColor === ""
-            ? window
-                .getComputedStyle(e.target)
-                .getPropertyValue("background-color")
-            : e.target.style.backgroundColor;
-        const colorChannels = color.slice(4, -1).split(", ");
-        colorChannels[0] -= PIXEL_DIM_STEP;
-        colorChannels[1] -= PIXEL_DIM_STEP;
-        colorChannels[2] -= PIXEL_DIM_STEP;
-        currentColor = {
-          r: colorChannels[0],
-          g: colorChannels[1],
-          b: colorChannels[2],
-        };
-      }
-      changePixelColor(e.target, currentColor);
+      drawPixel(e.target);
     }
   });
   row.addEventListener("mousedown", (e) => {
-    if (isColorRandomized) currentColor = getRandomColor();
-    if (isPixelDimmerActivated) {
-      const color =
-        e.target.style.backgroundColor === ""
-          ? window
-              .getComputedStyle(e.target)
-              .getPropertyValue("background-color")
-          : e.target.style.backgroundColor;
-      const colorChannels = color.slice(4, -1).split(", ");
-      colorChannels[0] -= PIXEL_DIM_STEP;
-      colorChannels[1] -= PIXEL_DIM_STEP;
-      colorChannels[2] -= PIXEL_DIM_STEP;
-      currentColor = {
-        r: colorChannels[0],
-        g: colorChannels[1],
-        b: colorChannels[2],
-      };
-    }
-    changePixelColor(e.target, currentColor);
+    drawPixel(e.target);
   });
 }
 
