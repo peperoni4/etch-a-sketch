@@ -5,8 +5,8 @@ const randomizeColorBtn = document.querySelector(".btn-randomize-color");
 const pixelDimmerBtn = document.querySelector(".btn-pixel-dimmer");
 
 const DEFAULT_GRID_SIZE = 16;
-const SKETCH_WIDTH = 900;
-const SKETCH_HEIGHT = 900;
+const SKETCH_WIDTH = 800;
+const SKETCH_HEIGHT = 800;
 const PIXEL_DIM_STEP = 255 / 10;
 
 const PIXEL_COLOR_WHITE = { r: 255, g: 255, b: 255 };
