@@ -51,7 +51,9 @@ function getRandomColorChannelValue() {
 }
 
 function changeGridSize() {
-  let gridSize = parseInt(prompt("Enter new grid size (from [1,100]):"));
+  let gridSize = prompt("Enter new grid size (from [1,100]):");
+  if (!gridSize) return;
+  gridSize = parseInt(gridSize);
   if (!isGridSizeValid(gridSize)) {
     alert(`You have entered incorrect size (${gridSize}) when bounds are [1,100]\n
     So we assign default value of 16 for grid size`);
