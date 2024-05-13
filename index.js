@@ -23,6 +23,7 @@ function toggleButtonTextContent(flag, btnElement, defaultText, activatedText) {
   if (flag.value) {
     flag.value = false;
     btnElement.textContent = defaultText;
+    currentColor = PIXEL_COLOR_BLACK;
     return;
   }
   flag.value = true;
@@ -30,6 +31,9 @@ function toggleButtonTextContent(flag, btnElement, defaultText, activatedText) {
 }
 
 function pixelDimmerHandler() {
+  if (!isPixelDimmerActivated.value && isColorRandomized.value) {
+    randomizeColorHandler();
+  }
   toggleButtonTextContent(
     isPixelDimmerActivated,
     pixelDimmerBtn,
@@ -39,13 +43,15 @@ function pixelDimmerHandler() {
 }
 
 function randomizeColorHandler() {
+  if (!isColorRandomized.value && isPixelDimmerActivated.value) {
+    pixelDimmerHandler();
+  }
   toggleButtonTextContent(
     isColorRandomized,
     randomizeColorBtn,
     "Randomize color",
     "Back to default color"
   );
-  if (isColorRandomized.value === false) currentColor = PIXEL_COLOR_BLACK;
 }
 
 function getRandomColor() {
